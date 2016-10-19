@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 
 public class BookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Book> mBooks;
+    private listener mListener;
 
     public BookAdapter() {
         this.mBooks = new ArrayList<>();
@@ -30,6 +31,10 @@ public class BookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    public void setListener(listener mListener) {
+        this.mListener = mListener;
+    }
+
     public void addBooks(List<Book> books) {
         // int startPosition = getItemCount();
         mBooks.addAll(books);
@@ -38,13 +43,13 @@ public class BookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Book book = mBooks.get(position);
+        final Book book = mBooks.get(position);
 
         ViewHolder viewHolder = (ViewHolder) holder;
 
@@ -56,6 +61,12 @@ public class BookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         viewHolder.tvTitle.setText(book.getTitle());
         viewHolder.tvAuthor.setText(book.getAuthor());
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) mListener.onItemClick(book);
+            }
+        });
     }
 
     @Override
@@ -78,5 +89,9 @@ public class BookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public interface listener {
+        void onItemClick(Book book);
     }
 }

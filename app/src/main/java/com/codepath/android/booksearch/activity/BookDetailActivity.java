@@ -1,6 +1,7 @@
 package com.codepath.android.booksearch.activity;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -8,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.android.booksearch.R;
+import com.codepath.android.booksearch.model.Book;
+import com.squareup.picasso.Picasso;
 
 public class BookDetailActivity extends AppCompatActivity {
     private ImageView ivBookCover;
@@ -23,9 +26,19 @@ public class BookDetailActivity extends AppCompatActivity {
         tvTitle = (TextView) findViewById(R.id.tvTitle);
         tvAuthor = (TextView) findViewById(R.id.tvAuthor);
 
-        // Extract book object from intent extras
+        Book book = (Book) getIntent().getParcelableExtra("data");
 
         // Use book object to populate data into views
+        Picasso.with(this)
+                .load(book.getCoverUrl())
+                .placeholder(R.drawable.ic_nocover)
+                .into(ivBookCover);
+
+        tvTitle.setText(book.getTitle());
+        tvAuthor.setText(book.getAuthor());
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(book.getTitle());
     }
 
 
@@ -44,9 +57,9 @@ public class BookDetailActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
